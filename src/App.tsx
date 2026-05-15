@@ -176,7 +176,7 @@ function MainScreen() {
   const navigate = useCallback((raw: string) => {
     if (!raw.trim()) return;
     const target  = buildTargetUrl(raw);
-    const proxied = `/api/proxy?url=${encodeURIComponent(target)}`;
+    const proxied = `/.netlify/functions/proxy?url=${encodeURIComponent(target)}`;
     setCurrentUrl(target);
     setIframeSrc(proxied);
     setInputVal(raw.trim());
@@ -187,7 +187,7 @@ function MainScreen() {
   const handleRefresh = () => {
     if (!iframeSrc) return;
     setLoading(true);
-    setIframeSrc(`/api/proxy?url=${encodeURIComponent(currentUrl)}&_t=${Date.now()}`);
+    setIframeSrc(`/.netlify/functions/proxy?url=${encodeURIComponent(currentUrl)}&_t=${Date.now()}`);
   };
   const handleFullscreen = () =>
     isFullscreen ? document.exitFullscreen?.() : containerRef.current?.requestFullscreen?.();
