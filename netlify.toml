@@ -1,12 +1,13 @@
 [build]
   command = "npx vite build --config vite.vercel.config.ts"
   publish = "dist"
-  functions = "netlify/functions"
+  functions = "netlify/function"
 
 [[redirects]]
-  from = "/api/proxy"
-  to = "/.netlify/functions/proxy"
+  from = "/.netlify/functions/proxy"
+  to = "/.netlify/function/proxy"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
