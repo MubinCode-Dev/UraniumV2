@@ -5,7 +5,32 @@ export const handler = async (event) => {
   }
 
   const BLOCKED = new Set(["x-frame-options","content-security-policy","content-security-policy-report-only","strict-transport-security","x-content-type-options","transfer-encoding","connection","keep-alive"]);
-  const INTERCEPTOR = `<script>(function(){var P='/.netlify/functions/proxy?url=';function res(u){try{return new URL(u,location.href).href}catch(e){return null}}function np(a){return a&&(a.startsWith('http://')||a.startsWith('https://'))&&!a.includes('/.netlify/functions/proxy')}function px(u){var a=res(u);return np(a)?P+encodeURIComponent(a):null}document.addEventListener('click',function(e){var el=e.target;for(var i=0;i<6;i++){if(!el)break;if(el.tagName==='A'){var h=el.getAttribute('href');if(h&&!h.startsWith('javascript:')&&!h.startsWith('#')){var p=px(h);if(p){e.preventDefault();e.stopImmediatePropagation();location.href=p;}}break;}el=el.parentElement;}},true);}());<\/script>`;
+
+  const INTERCEPTOR = `<script>(function(){
+  try{Object.defineProperty(window,'top',{get:function(){return window;}});}catch(e){}
+  try{Object.defineProperty(window,'parent',{get:function(){return window;}});}catch(e){}
+  try{Object.defineProperty(window,'frameElement',{get:function(){return null;}});}catch(e){}
+  var P='/.netlify/functions/proxy?url=';
+  function res(u){try{return new URL(u,location.href).href}catch(e){return null}}
+  function np(a){return a&&(a.startsWith('http://')||a.startsWith('https://'))&&!a.includes('/.netlify/functions/proxy')}
+  function px(u){var a=res(u);return np(a)?P+encodeURIComponent(a):null}
+  document.addEventListener('click',function(e){
+    var el=e.target;
+    for(var i=0;i<6;i++){
+      if(!el)break;
+      if(el.tagName==='A'){
+        var h=el.getAttribute('href');
+        if(h&&!h.startsWith('javascript:')&&!h.startsWith('#')&&!h.startsWith('mailto:')){
+          var p=px(h);if(p){e.preventDefault();e.stopImmediatePropagation();location.href=p;}
+        }
+        break;
+      }
+      el=el.parentElement;
+    }
+  },true);
+  var _open=window.open;
+  window.open=function(url,t,f){if(url){var p=px(String(url));if(p)return _open.call(this,p,'_self',f);}return _open.apply(this,arguments);};
+}());<\/script>`;
 
   try {
     const response = await fetch(rawUrl, {
