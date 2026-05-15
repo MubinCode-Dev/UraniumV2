@@ -334,7 +334,7 @@ function MainScreen() {
                 src={iframeSrc}
                 className="proxy-iframe"
                 title="Proxy"
-                sandbox="allow-scripts allow-forms allow-popups allow-top-navigation-by-user-activation"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 onLoad={() => setLoading(false)}
                 onError={() => setLoading(false)}
               />
